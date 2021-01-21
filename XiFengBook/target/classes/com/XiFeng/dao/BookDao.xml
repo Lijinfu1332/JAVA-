@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--作用于哪个接口-->
+<mapper namespace="com.XiFeng.dao.BookDao">
+    <resultMap id="book" type="Book">
+    <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="author" column="author"/>
+        <result property="sales" column="sales"/>
+        <result property="stock" column="stock"/>
+        <result property="img_path" column="imgPath"/>
+    </resultMap>
+    <!--添加书-->
+    <insert id="addBook" parameterType="com.XiFeng.pojo.Book">
+        insert into t_book values (#{id},#{name},#{price},#{author},#{sales},#{stock},#{imgPath})
+    </insert>
+    <!--删除书根据ID-->
+   <delete id="deleteBookById" parameterType="Integer">
+       delete from t_book where id=#{id}
+   </delete>
+    <!--修改书-->
+    <update id="updateBook" parameterType="com.XiFeng.pojo.Book">
+        update t_book set id=#{id},name=#{name},price=#{price},author=#{author},sales=#{sales} where id=#{id}
+    </update>
+    <!--根据ID查询书-->
+    <select id="queryBookById" parameterType="Integer" resultMap="book">
+        select  * from t_book where id=#{id}
+    </select>
+    <!--查询所有书-->
+    <select id="queryBooks" resultMap="book" >
+        select * from t_book;
+    </select>
+    <!--统计总共有多少条记录-->
+    <select id="queryForPageTotalCount" resultType="Integer">
+        select count(*) from t_book ;
+    </select>
+    <!--查询第几页的内容-->
+    <select id="queryForPageItems"  resultMap="book">
+        select * from t_book limit #{begin},#{pageSize}
+    </select>
+    <!--根据价格查询在这个价位之间的书有多少本-->
+    <select id="queryForPageTotalCountByPrice" resultType="Integer">
+        select count(*) from t_book where price between #{min} and #{max}
+    </select>
+    <!---->
+    <select id="queryForPageItemsByPrice" resultMap="book">
+        select * from t_book where price between #{min} and #{max} order by price limit #{begin},#{pageSize}
+    </select>
+</mapper>
